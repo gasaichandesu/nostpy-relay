@@ -172,11 +172,12 @@ class SubscriptionMatcher:
                 combined = {filter_: value}
                 if self._match_single_filter(combined, event):
                     self.logger.debug(f"Event matches filter: {filter_}")
+                    return True
                 else:
                     self.logger.debug("filter did not match the event.")
-                    return False
-            self.logger.debug("Returning true")
-            return True
+
+            self.logger.debug("Returning false")
+            return False
 
     def _match_single_filter(
         self, filter_: Dict[str, Any], event: Dict[str, Any]
