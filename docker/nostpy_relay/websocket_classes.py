@@ -168,6 +168,9 @@ class SubscriptionMatcher:
         """
         for list_item in self.filters:
             for filter_, value in list_item.items():
+                if filter == 'limit':
+                    self.logger.debug('Ignoring limit filter')
+                    continue
                 self.logger.debug(f"Checking filter: {filter_}, value : {value}")
                 combined = {filter_: value}
                 if self._match_single_filter(combined, event):
@@ -217,9 +220,6 @@ class SubscriptionMatcher:
                         f"Filter mismatch for tag '{key}': {event.get('tags', [])}"
                     )
                     return False
-            elif key == "limit":
-                self.logger.debug(f"Limit key = {value}")
-                continue
             elif key == "since":
                 if event.get("created_at", 0) < value:
                     return False
