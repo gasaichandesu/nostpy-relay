@@ -150,7 +150,7 @@ async def handle_websocket_connection(
                         "error: shutting down idle subscription",
                     )
                     await websocket.send(orjson.dumps(response).decode("utf-8"))
-                    del active_subscriptions[ws_message.subscription_id]
+                    active_subscriptions.pop(ws_message.subscription_id, None)
 
         except (
             websockets.exceptions.ConnectionClosedError,
