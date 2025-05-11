@@ -182,6 +182,8 @@ async def send_event_to_handler(
             if response.status:
                 formatted_response = await response_object.format_response()
                 await websocket.send(orjson.dumps(formatted_response).decode())
+    except websockets.ConnectionClosed:
+        logger.debug("Connection was closed before we could send a response")
     except Exception as e:
         logger.error(f"An error occurred while sending the event to the handler: {e}")
 
