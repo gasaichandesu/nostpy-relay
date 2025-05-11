@@ -73,7 +73,7 @@ services:
       - ./postgresql.conf:/postgresql.conf
       - ./postgresql/data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PGUSER_WRITE}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${PGUSER_WRITE}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -85,8 +85,6 @@ services:
 
   redis:
     image: redis:latest
-    ports:
-      - "6379:6379"
     networks:
       nostpy_network:
         ipv4_address: 172.28.0.6
@@ -139,9 +137,9 @@ services:
     ports:
       - "55680:55680"
       - "4317:4317"
-    command: ["--config=/etc/otel/config.yaml"]
+    command: [ "--config=/etc/otel/config.yaml" ]
     group_add:
-      - "999"  # Add to docker group to access docker socket
+      - "999" # Add to docker group to access docker socket
     logging:
       driver: "json-file"
       options:
@@ -150,6 +148,7 @@ services:
 
 volumes:
   postgres_data:
+
 
 networks:
   nostpy_network:
