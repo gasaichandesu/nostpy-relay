@@ -194,6 +194,16 @@ async def handle_new_event(request: Request) -> JSONResponse:
                         "pubkey": event_obj.pubkey,
                         "event_id": event_obj.event_id,
                     }
+
+                    is_banned = await event_obj.is_banned(cur)
+                    if is_banned:
+                        logger.debug(f"{event_obj.pubkey} is banned")
+                        return event_obj.evt_response(
+                                results_status="false",
+                                http_status_code=403,
+                                message="rejected: user is permanently banned",
+                            )
+
                     if WOT_ENABLED in ["True", "true"]:
                         wot_check = await event_obj.check_wot(cur)
                         if not wot_check:

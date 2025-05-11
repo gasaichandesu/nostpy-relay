@@ -134,6 +134,14 @@ class Event:
             if list[0] == "allow":
                 await self.mod_pubkey_perm(conn, cur, list[1], "true", list[2])
                 return f"allowed: {list[2]} has been allowed"
+            
+    async def is_banned(self, cur) -> bool:
+        await cur.execute(
+            f"""
+                SELECT client_pub FROM allowlist WHERE client_pub = '{self.pubkey}' AND allowed = false;
+            """
+        )
+        return await cur.fetchone()
 
     async def check_mgmt_allow(self, cur) -> bool:
         await cur.execute(

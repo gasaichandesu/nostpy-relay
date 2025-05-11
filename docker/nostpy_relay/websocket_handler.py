@@ -113,6 +113,7 @@ async def handle_websocket_connection(
                         current_span.set_attribute(
                             "operation.name", "send.event.handler"
                         )
+
                         await send_event_to_handler(
                             session=session,
                             event_dict=dict(ws_message.event_payload),
@@ -161,7 +162,6 @@ async def handle_websocket_connection(
                 f"An error occurred while processing the WebSocket message: {error}",
                 exc_info=True,
             )
-
 
 async def send_event_to_handler(
     session: aiohttp.ClientSession,
