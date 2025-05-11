@@ -37,7 +37,7 @@ REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_CHANNEL = "new_events_channel"
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.getLevelNamesMapping()[os.getenv("WH_LOG_LEVEL", "INFO")])
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
@@ -162,6 +162,7 @@ async def handle_websocket_connection(
                 f"An error occurred while processing the WebSocket message: {error}",
                 exc_info=True,
             )
+
 
 async def send_event_to_handler(
     session: aiohttp.ClientSession,

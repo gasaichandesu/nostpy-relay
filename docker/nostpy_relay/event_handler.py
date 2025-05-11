@@ -28,7 +28,7 @@ from utils import LimitedDict
 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.getLevelNamesMapping()[os.getenv("EH_LOG_LEVEL", "INFO")])
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)

@@ -11,6 +11,7 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - WS_PORT=${WS_PORT}
+      - WH_LOG_LEVEL=${WH_LOG_LEVEL}
     ports:
       - 8008:8008
     depends_on:
@@ -45,6 +46,7 @@ services:
       - PGHOST_READ=${PGHOST_READ}
       - WOT_ENABLED=${WOT_ENABLED}
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=delta
+      - EH_LOG_LEVEL=${EH_LOG_LEVEL}
     networks:
       nostpy_network:
         ipv4_address: 172.28.0.3
