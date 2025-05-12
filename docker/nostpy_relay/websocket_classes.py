@@ -174,8 +174,8 @@ class SubscriptionMatcher:
             else:
                 self.logger.debug("filter did not match the event.")
 
-            self.logger.debug("Returning false")
-            return False
+        self.logger.debug("Returning false")
+        return False
 
     def _match_single_filter(
         self, filter_: Dict[str, Any], event: Dict[str, Any]
