@@ -166,18 +166,13 @@ class SubscriptionMatcher:
         Returns:
             bool: True if the event matches any of the filters, False otherwise.
         """
-        for list_item in self.filters:
-            for filter_, value in list_item.items():
-                if filter == 'limit':
-                    self.logger.debug('Ignoring limit filter')
-                    continue
-                self.logger.debug(f"Checking filter: {filter_}, value : {value}")
-                combined = {filter_: value}
-                if self._match_single_filter(combined, event):
-                    self.logger.debug(f"Event matches filter: {filter_}")
-                    return True
-                else:
-                    self.logger.debug("filter did not match the event.")
+        for filter_ in self.filters:
+            self.logger.debug(f"Checking filter: {filter_}")
+            if self._match_single_filter(filter_, event):
+                self.logger.debug(f"Event matches filter: {filter_}")
+                return True
+            else:
+                self.logger.debug("filter did not match the event.")
 
             self.logger.debug("Returning false")
             return False
@@ -197,6 +192,10 @@ class SubscriptionMatcher:
         """
         for key, value in filter_.items():
             self.logger.debug(f"Checking key: {key}, value: {value}")
+
+            if key == "limit":
+                self.logger.debug("Ignoring limit constraint")
+                continue
 
             if key == "kinds":
                 if event.get("kind") not in value:
@@ -221,10 +220,10 @@ class SubscriptionMatcher:
                     )
                     return False
             elif key == "since":
-                if event.get("created_at", 0) < value:
+                if event.get("created_at", 0) <= value:
                     return False
             elif key == "until":
-                if event.get("created_at", 0) > value:
+                if event.get("created_at", 0) >= value:
                     return False
             elif key == "search":
                 self.logger.debug(
