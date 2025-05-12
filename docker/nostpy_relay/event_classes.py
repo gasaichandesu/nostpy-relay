@@ -300,12 +300,12 @@ class Subscription:
 
                 elif item in ["since", "until"]:
                     if item == "since":
-                        since = f'created_at > {updated_keys["since"]}'
+                        since = f'created_at >= {updated_keys["since"]}'
                         query_parts.append(since)
                         outer_break = True
                         continue
                     elif item == "until":
-                        until = f'created_at < {updated_keys["until"]}'
+                        until = f'created_at <= {updated_keys["until"]}'
                         query_parts.append(until)
                         outer_break = True
                         continue
