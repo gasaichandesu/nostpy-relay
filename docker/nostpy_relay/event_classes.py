@@ -134,7 +134,7 @@ class Event:
             if list[0] == "allow":
                 await self.mod_pubkey_perm(conn, cur, list[1], "true", list[2])
                 return f"allowed: {list[2]} has been allowed"
-            
+
     async def is_banned(self, cur) -> bool:
         await cur.execute(
             f"""
@@ -226,13 +226,21 @@ class Subscription:
         ]
 
     def _generate_tag_clause(self, tags) -> str:
-        tag_clause = (
-            " EXISTS ( SELECT 1 FROM jsonb_array_elements(tags) as elem WHERE {})"
-        )
-        conditions = [f"elem @> '{tag_pair}'" for tag_pair in tags]
+        clauses: List[str] = []
 
-        complete_cluase = tag_clause.format(" OR ".join(conditions))
-        return complete_cluase
+        for tag_name, values in tags():
+            # skip tag‐keys with no values
+            if not values:
+                continue
+
+            # build one containment test per value
+            tests = [f"tags @> '{json.dumps([[tag_name, v]])}'" for v in values]
+
+            # OR‐join them, wrap in parens
+            clauses.append("(" + " OR ".join(tests) + ")")
+
+        # finally AND‐join all tag‐key clauses
+        return " AND ".join(clauses)
 
     def _search_clause(self, search_item):
         search_clause = f" EXISTS ( SELECT 1 FROM jsonb_array_elements(tags) as elem WHERE elem::text ILIKE '%{search_item}%' OR content ILIKE '%{search_item}%')"
@@ -290,8 +298,7 @@ class Subscription:
 
                 if item.startswith("#"):
                     try:
-                        for tags in updated_keys[item]:
-                            tag_values.append(json.dumps([item[1:], tags]))
+                        tag_values.append([item[1:], updated_keys[item]])
 
                         outer_break = True
                         continue
