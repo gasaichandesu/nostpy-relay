@@ -228,7 +228,7 @@ class Subscription:
     def _generate_tag_clause(self, tags) -> str:
         clauses: List[str] = []
 
-        for tag_name, values in tags():
+        for tag_name, values in tags:
             # skip tag‐keys with no values
             if not values:
                 continue
